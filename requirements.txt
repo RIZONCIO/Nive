@@ -1,0 +1,10 @@
+# Runtime dependencies for ScriptNive.
+# Install with: pip install -r requirements.txt
+
+customtkinter
+psutil
+pystray
+Pillow
+ttkbootstrap
+win10toast
+pywin32; platform_system == "Windows"

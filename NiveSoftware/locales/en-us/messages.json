@@ -1,0 +1,12 @@
+{
+  "app_name": "ScriptNive",
+  "app_title": "ScriptNive - Graphical Interface",
+  "welcome": "Welcome to ScriptNive",
+  "optimization": "Optimization",
+  "diagnostics": "Diagnostics",
+  "repair": "Repair",
+  "tools": "Tools",
+  "monitoring": "Monitoring",
+  "network": "Network",
+  "about": "About"
+}

@@ -1,0 +1,58 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local configuration and secrets
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.pfx
+*.p12
+secrets/
+
+# Runtime logs and temporary files
+logs/*
+!logs/.gitkeep
+exports/*
+!exports/.gitkeep
+reports/*
+!reports/.gitkeep
+backups/*
+!backups/.gitkeep
+*.log
+*.tmp
+*.temp
+
+# Build and packaging output
+build/
+dist/
+*.spec
+
+# IDE and OS metadata
+.idea/
+.vscode/
+.vs/
+*.swp
+*.swo
+Thumbs.db
+desktop.ini
+
+# Test and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local app artifacts
+*.bak
+*.old
