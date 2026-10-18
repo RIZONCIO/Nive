@@ -13,7 +13,8 @@ O ScriptNive 1.6.9 oferece um menu com diversas opções para corrigir problemas
 
 ### Funcionalidades
 
-![Menu Inicial Do Script](image.png)
+<img width="413" height="798" alt="ScripNiveMenu" src="https://github.com/user-attachments/assets/37476a8f-9a2f-4bc1-9935-5d420855200e" />
+
 
 - **Informação Sobre ScriptNive**: Abrirá este PDF com todas as funções e explicações técnicas sobre como usar o ScriptNive e NiveBoost independentemente da sua versão.
 
@@ -62,7 +63,8 @@ O ScriptNive 1.6.9 oferece um menu com diversas opções para corrigir problemas
 
 ### Funcionalidades do NiveBoost
 
-![Menu Inicial Do NiveBoost](image-1.png)
+<img width="703" height="505" alt="NiveBoostMenu" src="https://github.com/user-attachments/assets/05a27a6c-10e3-4160-a7a4-b5f2cd04e6b0" />
+
 
 O NiveBoost 1.1.0 oferece um menu com diversas opções para otimizar o sistemas Windows , projetado para realizar atualizações que tornam o sistema mais leve, rápido e ágil. Importante destacar que este script utiliza apenas funções nativas do Windows e não requer a instalação de programas adicionais.
 
