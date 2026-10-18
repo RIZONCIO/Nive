@@ -1,15 +1,10 @@
 @echo off
-:: ============================================================
 :: NOME   : NiveSoftwareAuxiliares.bat
-:: AUTOR  : Inspirado no ScriptNive de Ryan Vinicius
-:: VERSAO : 2.0
-:: DESCR  : Instala/Desinstala softwares auxiliares via Winget/Choco
-::          e organiza TODOS os atalhos em uma pasta unica central.
-:: ============================================================
+:: AUTOR  : Ryan Vinicius
+:: VERSAO : 1.0
 
 CHCP 65001 >nul
 
-:: --------- Checagem de Administrador ---------
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     echo.
@@ -24,11 +19,9 @@ if %errorlevel% neq 0 (
 
 setlocal enabledelayedexpansion
 
-:: --------- Pasta central de ferramentas ---------
 set "NIVE_FOLDER=C:\Nive\NiveFerramentas"
 if not exist "%NIVE_FOLDER%" mkdir "%NIVE_FOLDER%" >nul 2>&1
 
-:: Cria atalho unico na Area de Trabalho para a pasta central
 if not exist "%USERPROFILE%\Desktop\Nive - Software Auxiliares.lnk" (
     powershell -NoProfile -Command "$ws = New-Object -ComObject WScript.Shell; $sc = $ws.CreateShortcut('%USERPROFILE%\Desktop\Nive - Software Auxiliares.lnk'); $sc.TargetPath = '%NIVE_FOLDER%'; $sc.Save()" >nul 2>&1
 )
@@ -79,9 +72,7 @@ timeout /t 2 >nul
 goto menu
 
 
-:: ============================================================
 :: DEFINICAO DOS SOFTWARES
-:: ============================================================
 :set_rufus
 set "software_name=Rufus Portable"
 set "winget_id=Rufus.Rufus"
@@ -171,9 +162,6 @@ set "shortcut_name=TestDisk"
 goto check_software
 
 
-:: ============================================================
-:: VERIFICA SE ESTA INSTALADO E PERGUNTA O QUE FAZER
-:: ============================================================
 :check_software
 cls
 echo ============================================================
@@ -215,10 +203,6 @@ if "!installed!"=="1" (
     goto menu
 )
 
-
-:: ============================================================
-:: INSTALACAO (Winget -> Choco) + ATALHO CENTRALIZADO
-:: ============================================================
 :install_software
 cls
 echo ============================================================
@@ -266,9 +250,6 @@ pause
 goto menu
 
 
-:: ============================================================
-:: DESINSTALACAO
-:: ============================================================
 :uninstall_software
 cls
 echo ============================================================
@@ -294,10 +275,6 @@ pause
 goto menu
 
 
-:: ============================================================
-:: ROTINA: CRIA ATALHO NA PASTA CENTRAL PROCURANDO O .EXE
-:: Args: %1 = padrao do exe (aceita *)   %2 = nome do atalho
-:: ============================================================
 :create_shortcut
 set "exe_path="
 for %%D in ("C:\Program Files" "C:\Program Files (x86)" "%LOCALAPPDATA%\Programs" "%ProgramData%\chocolatey\bin") do (

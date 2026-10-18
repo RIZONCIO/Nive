@@ -1,4 +1,4 @@
-<h1 align="center"> ScriptNive 1.6.8 </h1>
+<h1 align="center"> ScriptNive 1.6.9 </h1>
 
 [![GPLv3 License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/RIZONCIO/Script-Nive?tab=GPL-3.0-1-ov-file)
 [![1YearofProject](https://img.shields.io/badge/1YearofProjec-CreationTime-Yellow)](https://github.com/RIZONCIO/Script-Nive)
@@ -9,12 +9,11 @@ O **ScriptNive** é um script desenvolvido em batch, criado para fornecer soluç
 
 ## Sobre o Projeto
 
-O ScriptNive 1.6.8 oferece um menu com diversas opções para corrigir problemas em sistemas Windows 7 e versões posteriores. Este projeto foi desenvolvido com o intuito de ajudar usuários a resolver problemas básicos de forma rápida e eficiente.
+O ScriptNive 1.6.9 oferece um menu com diversas opções para corrigir problemas em sistemas Windows 7 e versões posteriores. Este projeto foi desenvolvido com o intuito de ajudar usuários a resolver problemas básicos de forma rápida e eficiente.
 
 ### Funcionalidades
 
-![Menu Inicial Do Script](https://github.com/user-attachments/assets/5a2ef80a-9756-41c5-a732-8fbaa0b39d3a)
-
+![Menu Inicial Do Script](image.png)
 
 - **Informação Sobre ScriptNive**: Abrirá este PDF com todas as funções e explicações técnicas sobre como usar o ScriptNive e NiveBoost independentemente da sua versão.
 
@@ -25,6 +24,8 @@ O ScriptNive 1.6.8 oferece um menu com diversas opções para corrigir problemas
 - **Verificar diagnóstico de erro**: Inicia o "Monitor de Confiabilidade no Windows", Que vai estar exibindo um diagnóstico de erros no seu sistema operacional.
 
 - **Otimizar Windows**: Inicia o Script NiveBoost, que possui um menu amplo de formas de otimização e aceleramento do Windows.
+
+-**Nive Software Auxiliares**: Inicia o Nive Software Auxiliares que contém 10 download de ferramentas Auxiliares para a manutenção.
 
 ### MENU TAREFAS
 
@@ -61,7 +62,7 @@ O ScriptNive 1.6.8 oferece um menu com diversas opções para corrigir problemas
 
 ### Funcionalidades do NiveBoost
 
-![Menu Inicial Do NiveBoost](https://github.com/user-attachments/assets/a9497079-d612-4f5d-a71e-0b0c0de64d6b)
+![Menu Inicial Do NiveBoost](image-1.png)
 
 O NiveBoost 1.1.0 oferece um menu com diversas opções para otimizar o sistemas Windows , projetado para realizar atualizações que tornam o sistema mais leve, rápido e ágil. Importante destacar que este script utiliza apenas funções nativas do Windows e não requer a instalação de programas adicionais.
 
@@ -109,9 +110,9 @@ O NiveBoost 1.1.0 oferece um menu com diversas opções para otimizar o sistemas
 
 ## Caso você tenha alguma dúvida
 
-Acesse esse PDF para evitar possíveis erros na hora da instalação : [Link](https://github.com/RIZONCIO/Script-Nive/blob/main/Nive/Documenta%C3%A7%C3%A3o-T%C3%A9cnica-do-ScriptNive.pdf)
+Acesse esse PDF para evitar possíveis erros na hora da instalação : [Link](https://github.com/RIZONCIO/Nive/blob/main/DOC/Documenta%C3%A7%C3%A3o-T%C3%A9cnica-do-ScriptNive.pdf)
 
-Caso seja necessário pode me contatar , Através Das minhas redes sociais. 
+Caso seja necessário pode me contatar , Através Das minhas redes sociais.
 
 ## Agradecimentos
 

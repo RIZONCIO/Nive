@@ -2,8 +2,8 @@
 NiveSoftware - Suite de Diagnóstico, Reparo e Otimização para Windows.
 """
 
-__version__ = "2.0.0"
-__author__ = "Ryan Vinicius Carvalho Pereira"
+__version__ = "1.6.9"
+__author__ = "Ryan Vinicius"
 
 import sys
 from pathlib import Path

@@ -1,12 +1,10 @@
 @ECHO OFF
 :: NOME   : NiveBoost
-:: AUTOR  : Ryan Vinicius Carvalho Pereira
-:: VERSAO : 1.1.1
-:: ============================================================
+:: AUTOR  : Ryan Vinicius
+:: VERSAO : 1.1.3
 
 CHCP 65001 >nul
 
-:: --------- Checagem de Administrador ---------
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     cls
@@ -23,15 +21,25 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-title NiveBoost 1.1.1
+title NiveBoost 1.1.3
 set "NIVE_DIR=C:\Nive"
+
+:: Inicializacao de Logs e Variaveis de Sessao
+if not exist "%NIVE_DIR%\Logs" mkdir "%NIVE_DIR%\Logs"
+if not exist "%NIVE_DIR%\Backup" mkdir "%NIVE_DIR%\Backup"
+
+for /f %%x in ('powershell -Command "Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'"') do set "TIMESTAMP=%%x"
+set "LOG_FILE=%NIVE_DIR%\Logs\NiveBoost_%TIMESTAMP%.log"
+set "RESTORE_CREATED="
+
+call :Logar "NiveBoost v1.1.3 iniciado por %username% no computador %computername%."
 
 :menu
 cls
 color 9
 
-echo Bem vindo o NiveBoost 1.1.1
-echo пѕ 
+echo Bem-vindo ao NiveBoost 1.1.3
+echo пѕ 
 echo ___      ___                         ________                                        
 echo `MM\     `M' 68b                      `MMMMMMMb.                                      
 echo  MMM\     M  Y89                       MM    `Mb                                /     
@@ -43,7 +51,7 @@ echo  M    \MM\M   MM     MM  M    MMMMMMMM  MM     MM MM     MM MM     MM  YMMM
 echo  M     \MMM   MM     `Mbd'    MM        MM     MM MM     MM MM     MM      `Mb  MM     
 echo  M      \MM   MM      YMP     YM    d9  MM    .M9 YM.   ,M9 YM.   ,M9 L    ,MM  YM.  , 
 echo _M_      \M  _MM_      M       YMMMM9  _MMMMMMM9'  YMMMMM9   YMMMMM9  MYMMMM9    YMMM9 
-echo пѕ 
+echo пѕ 
 
 date /t     
 time /t 
@@ -70,31 +78,31 @@ echo * 8. Desabilitar Escrita De Cache De Navegadores e Streaming.  *
 echo * 9. Desabilitar propagandas na tela de bloqueio.              *
 echo * 10. Otimizar o Edge.                                         *
 echo * 11. Acelerar Windows.                                        *
-echo * 12. Sair                                                     *
+echo * 12. Criar Ponto de Restauração (Manual)                      *
+echo * 13. Sair                                                     *
 echo ================================================================
 
 set /p opcao= Escolha uma opcao: 
+set "opcao=%opcao:"=%"
+set "opcao=%opcao: =%"
 echo ------------------------------
-if %opcao% equ C goto opcaoC 
-if %opcao% equ c goto opcaoc
-if %opcao% equ N goto opcaoN
-if %opcao% equ n goto opcaon
-if %opcao% equ R goto opcaoR
-if %opcao% equ r goto opcaor
-if %opcao% equ S goto opcaoS
-if %opcao% equ s goto opcaos
-if %opcao% equ 1 goto opcao1
-if %opcao% equ 2 goto opcao2
-if %opcao% equ 3 goto opcao3
-if %opcao% equ 4 goto opcao4
-if %opcao% equ 5 goto opcao5
-if %opcao% equ 6 goto opcao6 
-if %opcao% equ 7 goto opcao7
-if %opcao% equ 8 goto opcao8
-if %opcao% equ 9 goto opcao9
-if %opcao% equ 10 goto opcao10
-if %opcao% equ 11 goto opcao11
-if %opcao% equ 12 goto opcao12
+if /i "%opcao%"=="C" goto opcaoC 
+if /i "%opcao%"=="N" goto opcaoN
+if /i "%opcao%"=="R" goto opcaoR
+if /i "%opcao%"=="S" goto opcaoS
+if "%opcao%"=="1" goto opcao1
+if "%opcao%"=="2" goto opcao2
+if "%opcao%"=="3" goto opcao3
+if "%opcao%"=="4" goto opcao4
+if "%opcao%"=="5" goto opcao5
+if "%opcao%"=="6" goto opcao6 
+if "%opcao%"=="7" goto opcao7
+if "%opcao%"=="8" goto opcao8
+if "%opcao%"=="9" goto opcao9
+if "%opcao%"=="10" goto opcao10
+if "%opcao%"=="11" goto opcao11
+if "%opcao%"=="12" goto opcao12
+if "%opcao%"=="13" goto opcao13
 
 :opcaoN :opcaon
 cls
@@ -106,7 +114,7 @@ goto Credito
 
 :opcaoR :opcaor
 cls
-echo пѕ 
+echo пѕ 
 echo              ■━━━Recomendações Técnicas━━━□
 echo         ╔══════════════════════════════════════╗
 echo         ║1.Criar Um Ponto de Restauração.     ║
@@ -126,154 +134,267 @@ if exist "%NIVE_DIR%\ScriptNive.bat" (
 )
 exit
 
+:: Sub-rotina para garantir Ponto de Restauracao automatico antes de otimizacoes (1-11)
+:VerificarPontoRestauracao
+if defined RESTORE_CREATED goto :eof
+cls
+echo ============================================================
+echo  [SEGURANCA] Criando Ponto de Restauracao Automatico...
+echo ============================================================
+call :Logar "Criando Ponto de Restauracao automatico (silencioso)."
+powershell -Command "Enable-ComputerRestore -Drive 'C:\' >$null 2>&1; Checkpoint-Computer -Description 'NiveBoost v1.1.3 - Auto Restore' -RestorePointType 'MODIFY_SETTINGS'" >nul 2>&1
+if %errorlevel% equ 0 (
+    echo [SUCESSO] Ponto de restauracao criado com sucesso.
+    call :Logar "Ponto de restauracao automatico criado com sucesso."
+) else (
+    echo [AVISO] Nao foi possivel criar o ponto automaticamente (Protecao do Sistema desativada).
+    call :Logar "Aviso: Falha ao criar ponto de restauracao automatico."
+)
+set "RESTORE_CREATED=1"
+timeout /t 2 >nul
+goto :eof
+
 :opcao1
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Desabilitar Alguns Servicos Do Windows"
     start "" "%NIVE_DIR%\Otimizadores\DesabilitarAlgunsServiços.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 1"
     goto menu
 )
 goto menu 
 
 :opcao2
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Desabilitar Tweaks De Tarefas Agendadas"
     start "" "%NIVE_DIR%\Otimizadores\DesabilitarTweaks.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 2"
     goto menu
 )
 goto menu 
 
 :opcao3
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Desabilitar Alguns Softwares do Windows"
     start "" "%NIVE_DIR%\Otimizadores\DesabilitarAlgunsSoftwares.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 3"
     goto menu
 )
 goto menu
 
 :opcao4
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Remover Telemetria e Coleta de Dados"
     start "" "%NIVE_DIR%\Otimizadores\RemoverTelemetria.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 4"
     goto menu
 )
 goto menu 
 
 :opcao5
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Remover Features Nao Usadas"
     start "" "%NIVE_DIR%\Otimizadores\RemoverFeatures.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 5"
     goto menu
 )
 goto menu 
 
 :opcao6
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Remover Animacoes Inuteis"
     start "" "%NIVE_DIR%\Otimizadores\RemoverAnimacoes.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 6"
     goto menu
 )
 goto menu 
 
 :opcao7
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
+    echo Criando backup do registro antes de aplicar alteracoes...
+    reg export "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" "%NIVE_DIR%\Backup\Search_%TIMESTAMP%.reg" /y >nul 2>&1
+    reg export "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" "%NIVE_DIR%\Backup\Explorer_Policies_%TIMESTAMP%.reg" /y >nul 2>&1
+    call :Logar "Backup do registro realizado para Opcao 7 em %NIVE_DIR%\Backup\"
+
     echo Continuando...
-REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /V BingSearchEnabled /T REG_DWORD /D 0 /F
-REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V DisableSearchBoxSuggestions /T REG_DWORD /D 1 /F
+    REG ADD "HKCU\Software\Microsoft\Windows\CurrentVersion\Search" /V BingSearchEnabled /T REG_DWORD /D 0 /F
+    REG ADD "HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer" /V DisableSearchBoxSuggestions /T REG_DWORD /D 1 /F
+    call :Logar "Executado com sucesso: Desabilitar Busca Web Na Barra De Pesquisa"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 7"
     goto menu
 )
 goto menu 
 
 :opcao8
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Desabilitar Escrita De Cache De Navegadores e Streaming"
     start "" "%NIVE_DIR%\Otimizadores\DesabilitaCacheNavegadoresStreaming.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 8"
     goto menu
 )
 goto menu 
 
 :opcao9
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
+    echo Criando backup do registro antes de aplicar alteracoes...
+    reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "%NIVE_DIR%\Backup\ContentDeliveryManager_%TIMESTAMP%.reg" /y >nul 2>&1
+    call :Logar "Backup do registro realizado para Opcao 9 em %NIVE_DIR%\Backup\"
+
     echo Continuando...
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "RotatingLockScreenOverlayEnabled" /T REG_DWORD /D 0 /F
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-338387Enabled" /T REG_DWORD /D 0 /F
+    reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "RotatingLockScreenOverlayEnabled" /T REG_DWORD /D 0 /F
+    reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /V "SubscribedContent-338387Enabled" /T REG_DWORD /D 0 /F
+    call :Logar "Executado com sucesso: Desabilitar propagandas na tela de bloqueio"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 9"
     goto menu
 )
 goto menu 
 
 :opcao10
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Otimizar o Edge"
     start "" "%NIVE_DIR%\Otimizadores\OtimizaroEdge.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 10"
     goto menu
 )
 goto menu 
 
 :opcao11
 cls
+call :VerificarPontoRestauracao
 echo OBS: Essas funções são irreversíveis a não ser que tenha criado um ponto de restauração!
 set /p resposta=Deseja realmente continuar? (s/n): 
+set "resposta=%resposta:"=%"
+set "resposta=%resposta: =%"
 if /i "%resposta%"=="s" (
     echo Continuando...
+    call :Logar "Executado: Acelerar Windows"
     start "" "%NIVE_DIR%\Otimizadores\AcelerarWindows.bat"
 ) else (
     echo Cancelando.
+    call :Logar "Cancelado pelo usuario: Opcao 11"
     goto menu
 )
 goto menu 
 
+:: Opcao 12: Criar Ponto de Restauracao Manual
 :opcao12
 cls
+echo ============================================================
+echo  CRIAR PONTO DE RESTAURACAO MANUAL
+echo ============================================================
+echo Aguarde, criando ponto de restauracao no sistema...
+call :Logar "Solicitada criacao manual de Ponto de Restauracao pelo usuario."
+powershell -Command "Enable-ComputerRestore -Drive 'C:\'; Checkpoint-Computer -Description 'NiveBoost v1.1.3 - Manual Restore Point' -RestorePointType 'MODIFY_SETTINGS'"
+if %errorlevel% equ 0 (
+    echo.
+    echo [SUCESSO] Ponto de restauracao criado com sucesso!
+    call :Logar "Ponto de restauracao manual criado com sucesso."
+) else (
+    echo.
+    echo [ERRO] Falha ao criar ponto de restauracao. Verifique se a protecao do sistema esta ativa no Windows.
+    call :Logar "Falha ao criar ponto de restauracao manual."
+)
+echo.
+pause
+goto menu
+
+:: Opcao 13: Sair
+:opcao13
+cls
+call :Logar "NiveBoost finalizado pelo usuario."
 exit
+
+:: Sub-rotina centralizada de logs
+:Logar
+echo [%date% - %time%] %* >> "%LOG_FILE%"
+goto :eof
 
 @echo off
 cls
@@ -322,12 +443,12 @@ echo                                         ^~77!Y^^77~~7!77~^
 echo                                         .~77!Y~~77~^7!77~^                                         
 echo                                         ^~!7!7^^77~^7!77~^                                         
 echo                                          .^7!7^^77^^7~7~:.                                         
-echo                                            !~!^^77^ 7~~                                            
-echo                                             :~ :!7: ~::                                            
-echo                                             .: .^^. :.                                             
-echo                                                .^^.                                                
+echo                                            !~!^^77^ 7~~                                             
+echo                                             :~ :!7: ~::                                             
+echo                                             .: .^^. :.                                              
+echo                                                .^^.                                                 
 echo                                                 ...      
-echo пѕ 
+echo пѕ 
 echo ___      ___                         ________                                        
 echo `MM\     `M' 68b                      `MMMMMMMb.                                      
 echo  MMM\     M  Y89                       MM    `Mb                                /     
@@ -339,7 +460,7 @@ echo  M    \MM\M   MM     MM  M    MMMMMMMM  MM     MM MM     MM MM     MM  YMMM
 echo  M     \MMM   MM     `Mbd'    MM        MM     MM MM     MM MM     MM      `Mb  MM     
 echo  M      \MM   MM      YMP     YM    d9  MM    .M9 YM.   ,M9 YM.   ,M9 L    ,MM  YM.  , 
 echo _M_      \M  _MM_      M       YMMMM9  _MMMMMMM9'  YMMMMM9   YMMMMM9  MYMMMM9    YMMM9 
-echo пѕ 
+echo пѕ 
 echo ̏                                                                                               ̏ 
 echo ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄Créditos▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
 echo ̏                                                                                               ̏
@@ -353,7 +474,7 @@ echo                                                           ╚════�
 echo  ̏                                                                                               ̏     
 echo                            ▐━━━Criadores dos Scripts━━━▌ 
 echo                          ╔══════════════════════════════╗
-echo                          ║OtimizaroEdge   ➞     AFaustini║
+echo                          ║OtimizaroEdge   ➞     AFaustini║
 echo                          ╚══════════════════════════════╝
 echo  ̏                                                                                               ̏
 echo     ▐━━━DATA DE LANÇAMENTO━━━▌                                        
@@ -365,12 +486,14 @@ echo =======================
 echo *  5.Menu Otimizador  *
 echo =======================
 set /p opcao= Escolha uma opcao: 
+set "opcao=%opcao:"=%"
+set "opcao=%opcao: =%"
 echo ------------------------------
-if %opcao% equ 1 goto opcao1
-if %opcao% equ 2 goto opcao2
-if %opcao% equ 3 goto opcao3
-if %opcao% equ 4 goto opcao4
-if %opcao% equ 5 goto opcao5
+if "%opcao%"=="1" goto opcao1
+if "%opcao%"=="2" goto opcao2
+if "%opcao%"=="3" goto opcao3
+if "%opcao%"=="4" goto opcao4
+if "%opcao%"=="5" goto opcao5
 
 :opcao1
 start https://docs.microsoft.com/pt-br/windows-server/administration/windows-commands/cmd
@@ -385,7 +508,7 @@ start https://www.text-image.com/
 goto Credito
 
 :opcao4
-start https://github.com/RIZONCIO/Script-Nive
+start https://github.com/RIZONCIO/Nive
 goto Credito
 
 :opcao5

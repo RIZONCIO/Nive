@@ -7,7 +7,7 @@ winget uninstall 9PCFS5B6T72H
 
 REM Vínculo com celular
 
-winget uninstall MSIX\Microsoft.YourPhone_1.24062.101.0_x64__8wekyb3d8bbwe
+powershell -NoProfile -Command "Get-AppxPackage -Name *YourPhone* | Remove-AppxPackage"
 
 REM Microsoft Edge
 

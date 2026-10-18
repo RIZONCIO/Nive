@@ -1,12 +1,12 @@
 @ECHO OFF
 :: NOME   : ScriptNive
-:: AUTOR  : Ryan Vinicius Carvalho Pereira
+:: AUTOR  : Ryan Vinicius
 :: VERSAO : 1.6.9
-:: ============================================================
 
 CHCP 65001 >nul
 
-:: --------- Checagem de Administrador ---------
+if not defined temp set "temp=%USERPROFILE%\AppData\Local\Temp"
+
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     cls
@@ -25,15 +25,11 @@ if %errorlevel% neq 0 (
 
 title ScriptNive 1.6.9
 
-:: ============================================================
-:: BOOTSTRAP - Verifica/instala arquivos em C:\Nive\
-:: ============================================================
 set "NIVE_DIR=C:\Nive"
-set "GITHUB_ZIP=https://github.com/RIZONCIO/Script-Nive/releases/download/v1.6.9/Nive.zip"
+set "GITHUB_ZIP=https://github.com/RIZONCIO/Nive/releases/download/Boostv1.0.3/Nive.zip"
 
 call :bootstrap
 
-:: Se o script nao estiver rodando de C:\Nive\, copia e relanca de la
 if /i not "%~dp0"=="%NIVE_DIR%\" (
     if not exist "%NIVE_DIR%\ScriptNive.bat" copy /Y "%~f0" "%NIVE_DIR%\ScriptNive.bat" >nul 2>&1
     start "" "%NIVE_DIR%\ScriptNive.bat"
@@ -95,40 +91,34 @@ echo * 13. Reinstalar Software Problemático   *
 echo * 14. Deletar Pastas Corrompidas         *
 echo * 15. Reparo Completo do Windows         *
 echo * 16. Sair                               *
-echo * 17.          *
 echo ==========================================
 
 set /p opcao= Escolha uma opcao: 
+set "opcao=%opcao:"=%"
+set "opcao=%opcao: =%"
 echo ------------------------------
-if %opcao% equ C goto opcaoC 
-if %opcao% equ c goto opcaoc
-if %opcao% equ I goto opcaoI
-if %opcao% equ i goto opcaoi
-if %opcao% equ E goto opcaoE
-if %opcao% equ e goto opcaoe
-if %opcao% equ S goto opcaoS
-if %opcao% equ s goto opcaos
-if %opcao% equ O goto opcaoO 
-if %opcao% equ o goto opcaoo
-if %opcao% equ A goto opcaoA
-if %opcao% equ a goto opcaoa
-if %opcao% equ 1 goto opcao1
-if %opcao% equ 2 goto opcao2
-if %opcao% equ 3 goto opcao3
-if %opcao% equ 4 goto opcao4
-if %opcao% equ 5 goto opcao5
-if %opcao% equ 6 goto opcao6 
-if %opcao% equ 7 goto opcao7
-if %opcao% equ 8 goto opcao8
-if %opcao% equ 9 goto opcao9
-if %opcao% equ 10 goto opcao10
-if %opcao% equ 11 goto opcao11
-if %opcao% equ 12 goto opcao12
-if %opcao% equ 13 goto opcao13
-if %opcao% equ 14 goto opcao14
-if %opcao% equ 15 goto opcao15
-if %opcao% equ 16 goto opcao16
-
+if /i "%opcao%"=="C" goto opcaoC
+if /i "%opcao%"=="I" goto opcaoI
+if /i "%opcao%"=="E" goto opcaoE
+if /i "%opcao%"=="S" goto opcaoS
+if /i "%opcao%"=="O" goto opcaoO
+if /i "%opcao%"=="A" goto opcaoA
+if "%opcao%"=="1" goto opcao1
+if "%opcao%"=="2" goto opcao2
+if "%opcao%"=="3" goto opcao3
+if "%opcao%"=="4" goto opcao4
+if "%opcao%"=="5" goto opcao5
+if "%opcao%"=="6" goto opcao6 
+if "%opcao%"=="7" goto opcao7
+if "%opcao%"=="8" goto opcao8
+if "%opcao%"=="9" goto opcao9
+if "%opcao%"=="10" goto opcao10
+if "%opcao%"=="11" goto opcao11
+if "%opcao%"=="12" goto opcao12
+if "%opcao%"=="13" goto opcao13
+if "%opcao%"=="14" goto opcao14
+if "%opcao%"=="15" goto opcao15
+if "%opcao%"=="16" goto opcao16
 
 :opcaoS :opcaos
 cls
@@ -202,7 +192,11 @@ goto menu
 
 :opcao6
 cls
-start cleanmgr.exe & del /q /f /s "%temp%\*" & del /q/f/s "C:\Windows\Temp\*" & del /q /f /s "%windir%\Prefetch\*" & del /q /f /s "%appdata%\Microsoft\Windows\Recent\*"
+start "" cleanmgr.exe
+if defined temp    del /q /f /s "%temp%\*"
+if defined windir  del /q /f /s "%windir%\Temp\*"
+if defined windir  del /q /f /s "%windir%\Prefetch\*"
+if defined appdata del /q /f /s "%appdata%\Microsoft\Windows\Recent\*"
 echo ==================================
 echo *      Temp Limpo com sucesso  *  
 echo *      HD  Limpo com sucesso   *
@@ -286,8 +280,21 @@ echo.
 
 set /p pasta=Digite o caminho COMPLETO da pasta que deseja deletar: 
 
-if not "%pasta:~0,1%"=="\"" set "pasta=%pasta%"
 set "pasta=%pasta:"=%"
+
+if "%pasta%"=="" (
+    echo.
+    echo [ERRO] Nenhum caminho informado.
+    pause
+    goto menu
+)
+
+if "%pasta:~3%"=="" (
+    echo.
+    echo [ERRO] Nao e permitido deletar a raiz de um drive.
+    pause
+    goto menu
+)
 
 if not exist "%pasta%" (
     echo.
@@ -312,7 +319,7 @@ echo.
 echo Tentando apagar a pasta normalmente...
 rd /s /q "%pasta%" >nul 2>&1
 
-start explorer.exe >nul 2>&1
+start "" explorer.exe >nul 2>&1
 
 if exist "%pasta%" (
     echo.
@@ -348,6 +355,8 @@ if exist "%pasta%" (
 
 echo.
 set /p repetir=Deseja deletar outra pasta? (s/n): 
+set "repetir=%repetir:"=%"
+set "repetir=%repetir: =%"
 if /i "%repetir%"=="s" (
     goto :opcao14
 ) else (
@@ -384,11 +393,6 @@ echo [ERRO] NiveSoftwareAuxiliares.bat nao encontrado em %NIVE_DIR%.
 pause
 goto menu
 
-
-:: ============================================================
-:: ROTINA : BOOTSTRAP
-:: Verifica arquivos em C:\Nive\ e baixa do GitHub se faltar
-:: ============================================================
 :bootstrap
 cls
 color 9
@@ -397,10 +401,8 @@ echo    ScriptNive - Verificacao de Ambiente
 echo ============================================================
 echo.
 
-:: Garante pasta base
 if not exist "%NIVE_DIR%" mkdir "%NIVE_DIR%" >nul 2>&1
 
-:: Verifica arquivos essenciais
 set "MISSING=0"
 if not exist "%NIVE_DIR%\ScriptNive.bat"                set "MISSING=1"
 if not exist "%NIVE_DIR%\NiveBoost.bat"                 set "MISSING=1"
@@ -449,7 +451,6 @@ if not exist "%EXTRACT%" (
 )
 
 echo [..] Copiando arquivos para %NIVE_DIR%...
-:: O comando abaixo copia TUDO que está dentro da pasta extraída para C:\Nive\
 xcopy /E /Y /I /Q "%EXTRACT%\*" "%NIVE_DIR%\" >nul 2>&1
 
 echo [..] Limpando arquivos temporarios...
@@ -509,10 +510,10 @@ echo                                         ^~77!Y^^77~~7!77~^
 echo                                         .~77!Y~~77~^7!77~^                                         
 echo                                         ^~!7!7^^77~^7!77~^                                         
 echo                                          .^7!7^^77^^7~7~:.                                         
-echo                                            !~!^^77^ 7~~                                            
-echo                                             :~ :!7: ~::                                            
-echo                                             .: .^^. :.                                             
-echo                                                .^^.                                                
+echo                                            !~!^^77^ 7~~                                             
+echo                                             :~ :!7: ~::                                             
+echo                                             .: .^^. :.                                              
+echo                                                .^^.                                                 
 echo                                                 ...      
 echo ̏                                                                                               ̏ 
 echo ▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄Créditos▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄
@@ -539,12 +540,14 @@ echo ===================
 echo *  5.Menu Tarefas *
 echo ===================
 set /p opcao= Escolha uma opcao: 
+set "opcao=%opcao:"=%"
+set "opcao=%opcao: =%"
 echo ------------------------------
-if %opcao% equ 1 goto opcao1
-if %opcao% equ 2 goto opcao2
-if %opcao% equ 3 goto opcao3
-if %opcao% equ 4 goto opcao4
-if %opcao% equ 5 goto opcao5
+if "%opcao%"=="1" goto opcao1
+if "%opcao%"=="2" goto opcao2
+if "%opcao%"=="3" goto opcao3
+if "%opcao%"=="4" goto opcao4
+if "%opcao%"=="5" goto opcao5
 
 :opcao1
 start https://docs.microsoft.com/pt-br/windows-server/administration/windows-commands/cmd
@@ -559,7 +562,7 @@ start https://www.text-image.com/
 goto Credito
 
 :opcao4
-start https://github.com/RIZONCIO/Script-Nive
+start https://github.com/RIZONCIO/Nive
 goto Credito
 
 :opcao5
